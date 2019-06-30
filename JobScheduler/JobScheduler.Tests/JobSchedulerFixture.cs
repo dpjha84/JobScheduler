@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JobScheduler.Exceptions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JobScheduler.Tests
@@ -106,11 +107,12 @@ namespace JobScheduler.Tests
                 "c => c"
             };
             var scheduler = new JobSceduler();
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsException<SelfDependencyException>(() =>
                 scheduler.Schedule(jobList)
             );
         }
 
+        [TestMethod]
         public void Test_Job_List_With_Multiple_Self_Dependencies_Throws_Exception()
         {
             var jobList = new List<string>
@@ -120,7 +122,7 @@ namespace JobScheduler.Tests
                 "c => c"
             };
             var scheduler = new JobSceduler();
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsException<SelfDependencyException>(() =>
                 scheduler.Schedule(jobList)
             );
         }
@@ -138,7 +140,7 @@ namespace JobScheduler.Tests
                 "f => b"
             };
             var scheduler = new JobSceduler();
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsException<CyclicDependencyException>(() =>
                 scheduler.Schedule(jobList)
             );
         }
@@ -156,7 +158,7 @@ namespace JobScheduler.Tests
                 "f => b"
             };
             var scheduler = new JobSceduler();
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsException<CyclicDependencyException>(() =>
                 scheduler.Schedule(jobList)
             );
         }

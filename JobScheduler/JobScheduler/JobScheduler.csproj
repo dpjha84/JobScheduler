@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\CyclicDependencyException.cs" />
+    <Compile Include="Exceptions\SelfDependencyException.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="JobSceduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

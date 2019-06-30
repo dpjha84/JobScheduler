@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JobScheduler.Exceptions;
+using System;
 using System.Collections.Generic;
 
 namespace JobScheduler
@@ -23,7 +24,7 @@ namespace JobScheduler
 
             // Handle self dependency case
             if (source == destination)
-                throw new InvalidOperationException("A job cannot be dependent on self. Job Name: " + source);
+                throw new SelfDependencyException("A job cannot be dependent on self. Job Name: " + source);
 
             // Create vertex objects first if not already created
             if (!vertices.ContainsKey(source))
@@ -51,7 +52,7 @@ namespace JobScheduler
         {
             // Check for cycle
             if (HasCycle())
-                throw new InvalidOperationException("Cycle found within jobs.");
+                throw new CyclicDependencyException("Cycle found within jobs.");
 
             var topologicalSortedList = new List<string>(vertices.Count);
             var visited = new HashSet<string>(vertices.Count);
