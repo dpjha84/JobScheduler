@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace JobScheduler.Tests
@@ -93,6 +94,71 @@ namespace JobScheduler.Tests
                 sequence.IndexOf('d') > sequence.IndexOf('a') &&
                 sequence.IndexOf('e') > sequence.IndexOf('b')
                 );
+        }
+
+        [TestMethod]
+        public void Test_Job_List_With_Single_Self_Dependency_Throws_Exception()
+        {
+            var jobList = new List<string>
+            {
+                "a =>",
+                "b =>",
+                "c => c"
+            };
+            var scheduler = new JobSceduler();
+            Assert.ThrowsException<InvalidOperationException>(() =>
+                scheduler.Schedule(jobList)
+            );
+        }
+
+        public void Test_Job_List_With_Multiple_Self_Dependencies_Throws_Exception()
+        {
+            var jobList = new List<string>
+            {
+                "a =>",
+                "b => b",
+                "c => c"
+            };
+            var scheduler = new JobSceduler();
+            Assert.ThrowsException<InvalidOperationException>(() =>
+                scheduler.Schedule(jobList)
+            );
+        }
+
+        [TestMethod]
+        public void Test_Job_List_With_Single_Cycle_Throws_Exception()
+        {
+            var jobList = new List<string>
+            {
+                "a =>",
+                "b => c",
+                "c => f",
+                "d => a",
+                "e =>",
+                "f => b"
+            };
+            var scheduler = new JobSceduler();
+            Assert.ThrowsException<InvalidOperationException>(() =>
+                scheduler.Schedule(jobList)
+            );
+        }
+
+        [TestMethod]
+        public void Test_Job_List_With_Multiple_Cycles_Throws_Exception()
+        {
+            var jobList = new List<string>
+            {
+                "a => d",
+                "b => c",
+                "c => f",
+                "d => a",
+                "e =>",
+                "f => b"
+            };
+            var scheduler = new JobSceduler();
+            Assert.ThrowsException<InvalidOperationException>(() =>
+                scheduler.Schedule(jobList)
+            );
         }
     }
 }

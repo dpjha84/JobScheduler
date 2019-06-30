@@ -26,7 +26,7 @@ namespace JobScheduler
                 // Split each entry by "=>" and give the values to graph object
                 var splittedJobs = jobEntry.Split(new string[] { "=>" }, StringSplitOptions.None);
                 graph.AddEdge(splittedJobs[0], splittedJobs[1]);
-            }
+            }            
 
             // Since Graph is built, get desired output now
             return graph.GetSequence();

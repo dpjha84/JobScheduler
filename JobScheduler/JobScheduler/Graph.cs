@@ -19,7 +19,11 @@ namespace JobScheduler
         {
             // Ensure there is no leading or trailing spaces in name
             source = source.Trim();
-            destination = destination.Trim();            
+            destination = destination.Trim();
+
+            // Handle self dependency case
+            if (source == destination)
+                throw new InvalidOperationException("A job cannot be dependent on self. Job Name: " + source);
 
             // Create vertex objects first if not already created
             if (!vertices.ContainsKey(source))
@@ -45,6 +49,10 @@ namespace JobScheduler
         /// <returns>Topologically sorted sequence of jobs (vertices)</returns>
         public string GetSequence()
         {
+            // Check for cycle
+            if (HasCycle())
+                throw new InvalidOperationException("Cycle found within jobs.");
+
             var topologicalSortedList = new List<string>(vertices.Count);
             var visited = new HashSet<string>(vertices.Count);
 
@@ -57,6 +65,33 @@ namespace JobScheduler
 
             // Once we got the topologically sorted vertices in list, join them to get the string
             return string.Join("", topologicalSortedList);
+        }
+
+        private bool HasCycle()
+        {
+            foreach (var node in vertices)
+            {
+                // As soon as cycle is detected, we return
+                if (HasCycle(node.Value, new HashSet<string>(vertices.Count), null))
+                    return true;
+            }
+            return false;
+        }
+
+        private bool HasCycle(Vertex node, HashSet<string> visited, Vertex previous)
+        {
+            // If we got a vertex which is already in visited set, it is a cycle
+            if (visited.Contains(node.Name))
+                return true;
+
+            visited.Add(node.Name);
+            foreach (var item in node.Edges)
+            {
+                // Ensure we don't recurse if this is same as previous vertex, because that will always be visited
+                if (item.Value != previous)
+                    return HasCycle(item.Value, visited, node);
+            }
+            return false;
         }
 
         private void TopologicalSort(Vertex current, HashSet<string> visited, List<string> list)
