@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace JobScheduler
 {
@@ -8,6 +7,15 @@ namespace JobScheduler
     /// </summary>
     public class JobSceduler
     {
+        private readonly IInputParser _inputParser;
+        private readonly IGraph _graph;
+
+        public JobSceduler(IInputParser parser, IGraph graph)
+        {
+            _inputParser = parser;
+            _graph = graph;
+        }
+
         /// <summary>
         /// Schedules a given list of jobs (in a format) so that jobes are always executed first
         /// </summary>
@@ -19,17 +27,17 @@ namespace JobScheduler
             if (jobList == null || jobList.Count == 0)
                 return string.Empty;
 
-            // Build the graph by creating vertices and edges after parsing job entries from job list
-            var graph = new Graph();
-            foreach (var jobEntry in jobList)
+            // Parse job list
+            var jobEntries = _inputParser.Parse(jobList);
+
+            // Build the graph by creating vertices and edges
+            foreach (var jobEntry in jobEntries)
             {
-                // Split each entry by "=>" and give the values to graph object
-                var splittedJobs = jobEntry.Split(new string[] { "=>" }, StringSplitOptions.None);
-                graph.AddEdge(splittedJobs[0], splittedJobs[1]);
+                _graph.AddEdge(jobEntry);
             }            
 
             // Since Graph is built, get desired output now
-            return graph.GetSequence();
+            return _graph.GetSequence();
         }
     }
 }

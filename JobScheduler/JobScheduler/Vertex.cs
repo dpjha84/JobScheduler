@@ -33,7 +33,8 @@ namespace JobScheduler
         /// <param name="destination">Other vertex which needs to be connected</param>
         public void AddEdge(Vertex destination)
         {
-            Edges.Add(destination.Name, destination);
+            if(!Edges.ContainsKey(destination.Name))
+                Edges.Add(destination.Name, destination);
         }        
     }
 }

@@ -41,11 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\InvalidJobNameException.cs" />
     <Compile Include="Exceptions\CyclicDependencyException.cs" />
     <Compile Include="Exceptions\SelfDependencyException.cs" />
     <Compile Include="Graph.cs" />
+    <Compile Include="IGraph.cs" />
+    <Compile Include="IInputParser.cs" />
+    <Compile Include="InputParser.cs" />
+    <Compile Include="JobEntry.cs" />
     <Compile Include="JobSceduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validators\IInputValidator.cs" />
+    <Compile Include="Validators\InputValidator.cs" />
     <Compile Include="Vertex.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

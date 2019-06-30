@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace JobScheduler.Exceptions
 {
     [Serializable]
-    public class SelfDependencyException : Exception
+    public class InvalidJobNameException : Exception
     {
-        public SelfDependencyException(string message) : base (message)
+        public InvalidJobNameException(string message) : base (message)
         {
 
         }

@@ -1,5 +1,4 @@
 ﻿using JobScheduler.Exceptions;
-using System;
 using System.Collections.Generic;
 
 namespace JobScheduler
@@ -7,7 +6,7 @@ namespace JobScheduler
     /// <summary>
     /// Graph class which will hold all jobs (vertices) and their dependencies
     /// </summary>
-    public class Graph
+    public class Graph : IGraph
     {
         private readonly Dictionary<string, Vertex> vertices = new Dictionary<string, Vertex>();
 
@@ -16,11 +15,10 @@ namespace JobScheduler
         /// </summary>
         /// <param name="source">Source vertex name</param>
         /// <param name="destination">Destination vertex name</param>
-        public void AddEdge(string source, string destination)
+        public void AddEdge(JobEntry jobEntry)
         {
-            // Ensure there is no leading or trailing spaces in name
-            source = source.Trim();
-            destination = destination.Trim();
+            var source = jobEntry.Name;
+            var destination = jobEntry.DependsOnJobName;
 
             // Handle self dependency case
             if (source == destination)
