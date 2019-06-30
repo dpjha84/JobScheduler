@@ -257,6 +257,19 @@ namespace JobScheduler.Tests
             );
         }
 
+        [TestMethod]
+        public void Test_Job_List_With_Invalid_Format_Throws_Exception()
+        {
+            var jobList = new List<string>
+            {
+                "xyz" // no "=>"
+            };
+            var scheduler = GetJobSceduler();
+            Assert.ThrowsException<InvalidOperationException>(() =>
+                scheduler.Schedule(jobList)
+            );
+        }
+
         private bool AreAnagrams(string a, string b)
         {
             if (a == null && b == null) return true;

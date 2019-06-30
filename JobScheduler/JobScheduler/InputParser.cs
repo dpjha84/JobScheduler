@@ -30,6 +30,9 @@ namespace JobScheduler
             var result = new List<JobEntry>();
             foreach (var entry in jobList)
             {
+                if (!entry.Contains("=>"))
+                    throw new InvalidOperationException($"Invalid format: {entry}");
+
                 var splittedJobs = entry.Split(new string[] { "=>" }, StringSplitOptions.None);
                 var jobEntry = new JobEntry
                 {
